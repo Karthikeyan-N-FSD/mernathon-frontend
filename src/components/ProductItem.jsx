@@ -20,10 +20,7 @@ const ProductItem = ({ id, image, name, price }) => {
     if (isInWishlist) {
       removeFromWishlist(id);
     } else {
-      setWishlistItems((prevWishlistItems) => ({
-        ...prevWishlistItems,
-        [id]: true,
-      }));
+      addToWishlist(id);
     }
   };
 

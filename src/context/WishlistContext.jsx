@@ -88,6 +88,40 @@ const WishlistContextProvider = ({ children }) => {
     }
   };
 
+  const addToWishlist = async (productId) => {
+    const token = getAuthToken();
+    if (!token) {
+      toast.error("Please log in to add items to your wishlist");
+      navigate("/login");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.post(`/wishlist/add`, { productId });
+      const items = response.data.items || [];
+      setWishlistData(items);
+      setWishlistItems(
+        items.reduce((acc, item) => {
+          acc[item.productId._id] = true;
+          return acc;
+        }, {})
+      );
+      toast.success("Item Added To Wishlist");
+    } catch (err) {
+      const errorMsg =
+        err.response?.data?.error || "Failed to add to wishlist";
+      toast.error(errorMsg);
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+        navigate("/login");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const value = {
     wishlistData,
     wishlistItems,
@@ -97,6 +131,7 @@ const WishlistContextProvider = ({ children }) => {
     currency: "$",
     removeFromWishlist,
     fetchWishlist: getWishlist,
+    addToWishlist,
   };
 
   return (
