@@ -30,7 +30,10 @@ const SearchBar = () => {
         <img className="w-4" src={assets.search_icon} alt="Search" />
       </div>
       <img
-        onClick={() => setShowSearch(!showSearch)}
+        onClick={() => {
+          setShowSearch(!showSearch);
+          setSearch("");
+        }}
         className="inline w-3 cursor-pointer"
         src={assets.cross_icon}
         alt="Close"
