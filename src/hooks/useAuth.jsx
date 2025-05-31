@@ -27,6 +27,7 @@ const useAuth = (initialState = "Login") => {
           localStorage.setItem("user", JSON.stringify(data.user));
           navigate("/");
           alert("Login successful");
+          setForm({ email: "", password: "" })
         } else {
           alert(data.message || "Login failed");
         }
