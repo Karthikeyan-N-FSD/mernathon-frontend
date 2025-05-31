@@ -70,6 +70,7 @@ const Cart = () => {
                 <div className="flex items-center gap-2 justify-center">
                   <button
                     onClick={() =>
+                      item.quantity > 1 &&
                       updateQuantity(
                         item.productId._id,
                         item.size,
@@ -83,17 +84,18 @@ const Cart = () => {
                   </button>
                   <input
                     onChange={(e) => {
-                      const value = e.target.value;
-                      if (value !== "") {
+                      const value = Number(e.target.value);
+                      if (value >= 1) {
                         updateQuantity(
                           item.productId._id,
                           item.size,
-                          Number(value)
+                          value
                         );
                       }
                     }}
                     className="px-1 py-1 border max-w-12 text-center sm:max-w-20 sm:px-2"
                     type="number"
+                    min={1}
                     value={item.quantity}
                     readOnly={false}
                   />
