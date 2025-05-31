@@ -33,8 +33,8 @@ const ProductItem = ({ id, image, name, price }) => {
         <div className="overflow-hidden">
           <img
             className="transition ease-in-out hover:scale-110"
-            src={image && image[0] && `/images/${image[0]}.png`}
-            alt={name || "Product"}
+            src={`${import.meta.env.VITE_SERVER_URL}/images/${image}.png`}
+            alt={name}
           />
         </div>
         <p className="pt-3 pb-1 text-sm">{name || "Unknown Product"}</p>

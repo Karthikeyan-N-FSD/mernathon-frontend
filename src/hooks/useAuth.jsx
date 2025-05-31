@@ -24,10 +24,10 @@ const useAuth = (initialState = "Login") => {
 
       if (currentState === "Login") {
         if (data.token) {
+          localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
           navigate("/");
           alert("Login successful");
-          setForm({ email: "", password: "" })
         } else {
           alert(data.message || "Login failed");
         }

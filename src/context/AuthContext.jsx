@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [currentState, setCurrentState] = useState("Login");
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const navigate = useNavigate();
 
   const onChange = (e) => {
@@ -15,14 +15,29 @@ export const AuthProvider = ({ children }) => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+
+    const password = form.password;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      alert(
+        "Password must be at least 8 characters long, contain at least 1 number and 1 uppercase letter."
+      );
+      return;
+    }
+
     const url = currentState === "Login" ? "/login" : "/signup";
+    const payload =
+      currentState === "Login"
+        ? { email: form.email, password: form.password }
+        : form;
 
     try {
-      const response = await axiosInstance.post(`/auth${url}`, form);
+      const response = await axiosInstance.post(`/auth${url}`, payload);
       const data = response.data;
 
       if (currentState === "Login") {
         if (data.token) {
+          localStorage.setItem("token", data.token);
           navigate("/");
           alert("Login successful");
         } else {
