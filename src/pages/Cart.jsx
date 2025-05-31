@@ -13,6 +13,8 @@ const Cart = () => {
   const { products } = useContext(ProductContext);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
+  const isCartEmpty = cartItems.length === 0;
+
   return (
     <div className="border-t pt-14">
       <div className="mb-3 text-2xl">
@@ -47,7 +49,7 @@ const Cart = () => {
                 <div className="flex items-start gap-6">
                   <img
                     className="w-16 sm:w-20"
-                    src={`${productData.image[0]}`}
+                    src={`${import.meta.env.VITE_SERVER_URL}/images/${productData.image[0]}.png`}
                     alt="Photo"
                   />
                   <div>

@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
 import { WishlistContext } from "../context/WishlistContext";
+import { CartContext } from "../context/CartContext";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
 
@@ -14,6 +15,8 @@ const Wishlist = () => {
     isLoading,
     error,
   } = useContext(WishlistContext);
+
+  const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
     fetchWishlist();
@@ -55,9 +58,7 @@ const Wishlist = () => {
             >
               <img
                 className="w-24 h-24 object-cover"
-                src={`${import.meta.env.VITE_SERVER_URL}/images/${
-                  item.productId.image[0]
-                }`}
+                src={`${import.meta.env.VITE_SERVER_URL}/images/${item.productId.image[0]}.png`}
                 alt={item.productId.name || "Product"}
               />
               <div className="flex-1">
@@ -76,6 +77,11 @@ const Wishlist = () => {
                 <button
                   className="px-4 py-2 text-sm text-white bg-black active:bg-gray-700"
                   aria-label="Add to cart"
+                  onClick={() =>
+                    addToCart(
+                      item.productId._id,
+                      item.productId.sizes?.[0] || ""
+                    )}
                 >
                   ADD TO CART
                 </button>
