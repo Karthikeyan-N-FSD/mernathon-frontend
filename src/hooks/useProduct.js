@@ -4,7 +4,7 @@ import axiosInstance from "./../utils/axiosInstance";
 
 const useProduct = () => {
   const fetchProducts = useCallback(async (options = {}) => {
-    const { sort = "", category = "", subCategory = "" } = options;
+    const { sort = "", category = "", subCategory = "", search = "" } = options;
 
     try {
       const response = await axiosInstance.get("/product", {
@@ -12,6 +12,7 @@ const useProduct = () => {
           sort,
           category,
           subCategory,
+          search,
         },
       });
 

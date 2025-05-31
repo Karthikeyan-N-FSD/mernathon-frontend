@@ -1,12 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { ProductContext } from "../context/ProductContext";
-import { assets } from "../assets/assets";
+import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import ProductItem from "../components/ProductItem";
+import { assets } from "../assets/assets";
 
 const Collection = () => {
   const { products, fetchProducts, isLoading, error } =
     useContext(ProductContext);
+  const { search } = useContext(ShopContext);
   const [showFilter, setShowFilter] = useState(false);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
@@ -21,11 +23,12 @@ const Collection = () => {
         : "",
     category: category.join(","),
     subCategory: subCategory.join(","),
+    search: search || "",
   };
 
   useEffect(() => {
     fetchProducts(filteredParams);
-  }, [fetchProducts, category, subCategory, sortType]);
+  }, [fetchProducts, category, subCategory, sortType, search]);
 
   const toggleCategory = (e) => {
     const value = e.target.value;
