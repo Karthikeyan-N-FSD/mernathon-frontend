@@ -13,7 +13,7 @@ const CartContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
   const navigate = useNavigate();
-  const { products } = useContext(ProductContext);
+  const { products, setProducts, fetchProductById } = useContext(ProductContext);
 
   const getAuthToken = () => {
     return localStorage.getItem("token");
@@ -49,6 +49,19 @@ const CartContextProvider = ({ children }) => {
     }
   }, []);
 
+  const mergeMissingProducts = async (cartItems) => {
+    const missingProductIds = cartItems
+      .map((item) => item.productId._id)
+      .filter((id) => !products.some((p) => p._id === id));
+
+    if (missingProductIds.length > 0) {
+      const fetchedProducts = await Promise.all(
+        missingProductIds.map((id) => fetchProductById(id))
+      );
+      setProducts([...products, ...fetchedProducts.filter(Boolean)]);
+    }
+  };
+
   const addToCart = async (productId, size) => {
     if (!size) {
       toast.error("Please Select a Size");
@@ -61,6 +74,7 @@ const CartContextProvider = ({ children }) => {
         size,
       });
       setCartItems(response.data.items || []);
+      await mergeMissingProducts(response.data.items || []);
       toast.success("Item Added To The Cart");
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to add to cart");
@@ -96,6 +110,7 @@ const CartContextProvider = ({ children }) => {
       }
 
       setCartItems(response.data.items);
+      await mergeMissingProducts(response.data.items);
 
       toast.success(
         quantity === 0 ? "Item Removed From The Cart" : "Cart Updated"
