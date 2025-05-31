@@ -8,11 +8,13 @@ import { assets } from "../assets/assets";
 const Collection = () => {
   const { products, fetchProducts, isLoading, error } =
     useContext(ProductContext);
-  const { search } = useContext(ShopContext);
+  const { search, setSearch } = useContext(ShopContext);
   const [showFilter, setShowFilter] = useState(false);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [sortType, setSortType] = useState("relevant");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const filteredParams = {
     sort:
@@ -24,11 +26,16 @@ const Collection = () => {
     category: category.join(","),
     subCategory: subCategory.join(","),
     search: search || "",
+    page,
   };
 
   useEffect(() => {
-    fetchProducts(filteredParams);
-  }, [fetchProducts, category, subCategory, sortType, search]);
+    const fetch = async () => {
+      const data = await fetchProducts(filteredParams);
+      if (data && data.totalPages) setTotalPages(data.totalPages);
+    };
+    fetch();
+  }, [fetchProducts, category, subCategory, sortType, search, page]);
 
   const toggleCategory = (e) => {
     const value = e.target.value;
@@ -46,6 +53,14 @@ const Collection = () => {
         ? prev.filter((item) => item !== value)
         : [...prev, value]
     );
+  };
+
+  const handleClearFilters = () => {
+    setCategory([]);
+    setSubCategory([]);
+    setSortType("relevant");
+    setPage(1);
+    if (typeof setSearch === "function") setSearch("");
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -111,6 +126,7 @@ const Collection = () => {
           subCategory.length > 0 ||
           sortType !== "relevant") && (
           <button
+            onClick={handleClearFilters}
             className={`px-4 py-2 mt-1 text-white bg-black rounded hover:bg-gray-900 ${
               showFilter ? "block" : "hidden"
             } sm:block`}
@@ -154,11 +170,21 @@ const Collection = () => {
           )}
         </div>
         <div className="flex justify-center mt-8">
-          <button className="px-4 py-2 mr-2 bg-gray-200 rounded disabled:opacity-50">
+          <button
+            className="px-4 py-2 mr-2 bg-gray-200 rounded disabled:opacity-50"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
             Previous
           </button>
-          <span className="px-4 py-2">Page 1 of 5</span>
-          <button className="px-4 py-2 ml-2 bg-gray-200 rounded disabled:opacity-50">
+          <span className="px-4 py-2">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            className="px-4 py-2 ml-2 bg-gray-200 rounded disabled:opacity-50"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+          >
             Next
           </button>
         </div>

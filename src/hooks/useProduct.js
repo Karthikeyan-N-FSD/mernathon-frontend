@@ -4,7 +4,7 @@ import axiosInstance from "./../utils/axiosInstance";
 
 const useProduct = () => {
   const fetchProducts = useCallback(async (options = {}) => {
-    const { sort = "", category = "", subCategory = "", search = "" } = options;
+    const { sort = "", category = "", subCategory = "", search = "", page = 1 } = options;
 
     try {
       const response = await axiosInstance.get("/product", {
@@ -13,12 +13,11 @@ const useProduct = () => {
           category,
           subCategory,
           search,
+          page,
         },
       });
 
-      return {
-        products: response.data.products,
-      };
+      return response.data;
     } catch (err) {
       const message = err.response?.data?.message || "Failed to fetch products";
       throw new Error(message);

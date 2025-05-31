@@ -21,9 +21,11 @@ const ProductContextProvider = ({ children }) => {
           ...options,
         });
         setProducts(productsData.products || []);
+        return productsData;
       } catch (err) {
         setError(err.message || "Failed to fetch products");
         toast.error(err.message || "Failed to fetch products");
+        return null;
       } finally {
         setIsLoading(false);
       }
