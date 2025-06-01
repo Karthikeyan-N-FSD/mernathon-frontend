@@ -1,3 +1,4 @@
+import axiosInstance from "../utils/axiosInstance";
 import { useState } from "react";
 
 export default function ReviewModal({ product, onClose }) {
@@ -5,6 +6,8 @@ export default function ReviewModal({ product, onClose }) {
   const [reviewText, setReviewText] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   const handleStarClick = (starRating) => {
     setRating(starRating);
@@ -24,6 +27,38 @@ export default function ReviewModal({ product, onClose }) {
       5: "Excellent",
     };
     return texts[rating] || "Click to rate";
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setMessageType("");
+    if (!rating) {
+      setMessage("Please select a rating.");
+      setMessageType("error");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await axiosInstance.post("/review", {
+        productId: product.productId._id,
+        rating,
+        comment: reviewText,
+      });
+      setMessage("Review submitted!");
+      setMessageType("success");
+      setTimeout(() => {
+        setIsModalOpen(false);
+        onClose();
+      }, 1200);
+    } catch (err) {
+      setMessage(
+        err.response?.data?.message || "Failed to submit review."
+      );
+      setMessageType("error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!product || !product.productId) {
@@ -97,7 +132,7 @@ export default function ReviewModal({ product, onClose }) {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <div className="block text-sm font-semibold text-gray-700 mb-3">
                 Your Rating
@@ -136,16 +171,30 @@ export default function ReviewModal({ product, onClose }) {
               />
             </div>
 
+            {message && (
+              <div
+                className={`text-center text-sm font-medium mb-2 ${
+                  messageType === "success"
+                    ? "text-green-600"
+                    : "text-red-500"
+                }`}
+              >
+                {message}
+              </div>
+            )}
+
             <button
+              type="submit"
               className={`w-full font-semibold py-3 px-6 rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-500/30 ${
                 isSubmitting
                   ? "bg-gray-400 cursor-not-allowed text-white"
                   : "bg-neutral-800 hover:bg-neutral-900 text-white hover:shadow-lg"
               }`}
+              disabled={isSubmitting}
             >
               {isSubmitting ? "Submitting..." : "Submit Review"}
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
