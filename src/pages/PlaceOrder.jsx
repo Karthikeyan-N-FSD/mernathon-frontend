@@ -6,11 +6,13 @@ import { ShopContext } from "../context/ShopContext";
 import { OrderContext } from "../context/OrderContext";
 import SuccessModal from "../components/SuccessModal";
 import { useAuth } from "../context/AuthContext";
+import { CartContext } from "../context/CartContext";
 
 const PlaceOrder = () => {
   const { navigate, cartItems, resetContextData } = useContext(ShopContext);
   const { placeOrder } = useContext(OrderContext);
   const { getUserProfile } = useAuth();
+  const { setCartItems } = useContext(CartContext);
 
   const [userDetails, setUserDetails] = useState({
     name: "",
@@ -92,6 +94,7 @@ const PlaceOrder = () => {
         cartItems,
         resetContextData
       );
+      setCartItems([]);
       setShowModal(true);
     } catch (error) {
       toast.error("Failed to place order. Please try again.");
