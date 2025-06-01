@@ -103,7 +103,12 @@ const CartContextProvider = ({ children }) => {
           ? `/cart/increase`
           : `/cart/decrease`;
 
-      const response = await axiosInstance.post(endpoint, { productId, size });
+      const body =
+        endpoint === "/cart/decrease"
+          ? { productId, size, quantity }
+          : { productId, size };
+
+      const response = await axiosInstance.post(endpoint, body);
 
       if (!response.data.items || !Array.isArray(response.data.items)) {
         throw new Error("Invalid cart items response from server");
