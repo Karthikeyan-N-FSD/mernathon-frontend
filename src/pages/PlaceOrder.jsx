@@ -129,56 +129,56 @@ const PlaceOrder = () => {
             disabled
           />
           <input
-            className="w-full px-4 py-2 border border-gray-300 rounded disabled:bg-gray-100 cursor-not-allowed"
+            className="w-full px-4 py-2 border border-gray-300 rounded"
             type="text"
             name="street"
             placeholder="Street"
             value={shippingAddress.street}
-            disabled
+            onChange={e => setShippingAddress({ ...shippingAddress, street: e.target.value })}
           />
           <div className="flex gap-3">
             <input
-              className="w-full px-4 py-2 border border-gray-300 rounded disabled:bg-gray-100 cursor-not-allowed"
+              className="w-full px-4 py-2 border border-gray-300 rounded"
               type="text"
               name="city"
               placeholder="City"
               value={shippingAddress.city}
-              disabled
+              onChange={e => setShippingAddress({ ...shippingAddress, city: e.target.value })}
             />
             <input
-              className="w-full px-4 py-2 border border-gray-300 rounded disabled:bg-gray-100 cursor-not-allowed"
+              className="w-full px-4 py-2 border border-gray-300 rounded"
               type="text"
               name="state"
               placeholder="State"
               value={shippingAddress.state}
-              disabled
+              onChange={e => setShippingAddress({ ...shippingAddress, state: e.target.value })}
             />
           </div>
           <div className="flex gap-3">
             <input
-              className="w-full px-4 py-2 border border-gray-300 rounded disabled:bg-gray-100 cursor-not-allowed"
+              className="w-full px-4 py-2 border border-gray-300 rounded"
               type="text"
               name="zip"
               placeholder="Zip Code"
               value={shippingAddress.zip}
-              disabled
+              onChange={e => setShippingAddress({ ...shippingAddress, zip: e.target.value })}
             />
             <input
-              className="w-full px-4 py-2 border border-gray-300 rounded disabled:bg-gray-100 cursor-not-allowed"
+              className="w-full px-4 py-2 border border-gray-300 rounded"
               type="text"
               name="country"
               placeholder="Country"
               value={shippingAddress.country}
-              disabled
+              onChange={e => setShippingAddress({ ...shippingAddress, country: e.target.value })}
             />
           </div>
           <input
-            className="w-full px-4 py-2 border border-gray-300 rounded disabled:bg-gray-100 cursor-not-allowed"
+            className="w-full px-4 py-2 border border-gray-300 rounded"
             type="tel"
             name="mobile"
             placeholder="Mobile"
             value={userDetails.mobile}
-            disabled
+            onChange={e => setUserDetails({ ...userDetails, mobile: e.target.value })}
           />
         </div>
 
